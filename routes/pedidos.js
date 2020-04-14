@@ -20,7 +20,7 @@ router.get('/listar', async(req, res) => {
 });
 
 
-// RUTA QUE CREA PEDIDOS
+// RUTA QUE CREA PEDIDOSj
 router.post('/crear', async(req, res) => {
     // RECIBE LOS DATOS
     const datos = {
