@@ -36,6 +36,30 @@ router.put("/modificar/:id", async(req, res) => {
     res.send('tamos listones');
 });
 
+// RUTA QUE CREA PEDIDOSj
+router.post('/crear', async(req, res) => {
+    // RECIBE LOS DATOS
+    const datos = {
+        "id_usuario": req.body.id_usuario,
+        "nombre_producto": req.body.nombre_producto,
+        "imagen": req.body.url_img,
+        "cantidad": req.body.cantidad,
+        "valor_unitario": req.body.valor_unitario,
+        "valor_total": req.body.valor_total
+    }
+    const sql = "INSERT INTO pedidos SET ?";
+    await pool.query(sql, datos,
+        (error, result) => {
+            //recibe los errores
+            if (error) {
+                console.log(error)
+            } else {
+                // recibe los resultados de la consulta
+                res.sendStatus(200);
+            }
+        })
+});
+
 router.put("/modificar/producto/:id", async(req, res) => {
     const { id } = req.params;
     const { id_producto } = req.body;
@@ -136,5 +160,4 @@ router.delete("/eliminar/:id", async(req, res) => {
         })
 
 });
-
 module.exports = router;
