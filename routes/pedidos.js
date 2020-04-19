@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/listar', async(req, res) => {
     // sql indica la consulta
-    const sql = "SELECT p.Nombre,u.Nombre,pe.Valor,pe.Cantidad FROM pedido pe, producto p, usuario u WHERE pe.id_producto = p.id_producto AND u.id_usuario = pe.id_usuario ";
+    const sql = "SELECT p.Nombre as producto,u.Nombre as usuario ,pe.Valor as valor,pe.Cantidad as cantidad FROM pedido pe, producto p, usuario u WHERE pe.id_producto = p.id_producto AND u.id_usuario = pe.id_usuario ";
     await pool.query(sql,
         (error, result) => {
             //recibe los errores
@@ -113,7 +113,7 @@ router.get('/masvendido', async(req, res) => {
 
 router.get('/comprados', async(req, res) => {
     // sql indica la consulta
-    const sql = "SELECT p.Nombre,u.Nombre,pe.Valor,pe.Cantidad FROM pedido pe, producto p, usuario u WHERE u.id_usuario = pe.id_usuario AND pe.id_producto = p.id_producto AND pe.id_estado=1";
+    const sql = "SELECT p.Nombre as producto,u.Nombre as usuario,pe.Valor as valor, pe.Cantidad as cantidad FROM pedido pe, producto p, usuario u WHERE u.id_usuario = pe.id_usuario AND pe.id_producto = p.id_producto AND pe.id_estado=1";
     await pool.query(sql,
         (error, result) => {
             //recibe los errores
@@ -129,7 +129,7 @@ router.get('/comprados', async(req, res) => {
 
 router.get('/cancelado', async(req, res) => {
     // sql indica la consulta
-    const sql = "SELECT p.Nombre,u.Nombre,pe.Valor,pe.Cantidad FROM pedido pe, producto p, usuario u WHERE u.id_usuario = pe.id_usuario AND pe.id_producto = p.id_producto AND pe.id_estado=2";
+    const sql = "SELECT p.Nombre as producto,u.Nombre as usuario,pe.Valor as valor,pe.Cantidad as cantidad FROM pedido pe, producto p, usuario u WHERE u.id_usuario = pe.id_usuario AND pe.id_producto = p.id_producto AND pe.id_estado=2";
     await pool.query(sql,
         (error, result) => {
             //recibe los errores
