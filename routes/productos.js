@@ -3,38 +3,10 @@ const pool = require('../bd.js');
 
 const router = express.Router();
 
-// RUTA QUE LISTA LOS PRODUCTOS
+
 router.get('/listar', async(req, res) => {
     // sql indica la consulta
-    const sql = "SELECT * FROM productos";
-    await pool.query(sql,
-        (error, result) => {
-            //recibe los errores
-            if (error) {
-                console.log(error)
-            } else {
-                // recibe los resultados de la consulta
-                res.json(result);
-            }
-        })
-});
-router.get('/codigo_pro', async(req, res) => {
-    // sql indica la consulta
-    const sql = "SELECT codigo_producto FROM productos ";
-    await pool.query(sql,
-        (error, result) => {
-            //recibe los errores
-            if (error) {
-                console.log(error)
-            } else {
-                // recibe los resultados de la consulta
-                res.json(result);
-            }
-        })
-});
-router.get('/nombre_pro', async(req, res) => {
-    // sql indica la consulta
-    const sql = "SELECT nombre_producto FROM productos ";
+    const sql = "SELECT * FROM producto";
     await pool.query(sql,
         (error, result) => {
             //recibe los errores
@@ -47,9 +19,9 @@ router.get('/nombre_pro', async(req, res) => {
         })
 });
 
-router.get('/valor_pro', async(req, res) => {
-    // sql indica la consulta
-    const sql = "SELECT valor_producto FROM productos ";
+router.get("/idpro", async(req, res) => {
+    const { id_producto } = req.params;
+    const sql = "SELECT id_producto FROM producto";
     await pool.query(sql,
         (error, result) => {
             //recibe los errores
@@ -60,44 +32,14 @@ router.get('/valor_pro', async(req, res) => {
                 res.json(result);
             }
         })
+
 });
 
-// RUTA QUE CREA PRODUCTOS
-router.post('/crear', async(req, res) => {
-    // RECIBE LOS DATOS
+router.get("/codigo", async(req, res) => {
     const datos = {
-        "nombre_producto": req.body.nombre_producto,
-        "valor_producto": req.body.valor_producto,
-        "codigo_producto": req.body.codigo_producto,
-        "url_img": req.body.url_img
+        "Codigo": req.body.Codigo
     }
-    const sql = "INSERT INTO productos SET ?";
-    await pool.query(sql, datos,
-        (error, result) => {
-            //recibe los errores
-            if (error) {
-                console.log(error)
-            } else {
-                // recibe los resultados de la consulta
-                res.sendStatus(200);
-            }
-        })
-});
-
-
-// RUTA QUE CREA PRODUCTOS
-router.put('/editar', async(req, res) => {
-    // RECIBE LOS DATOS
-    const datos = {
-            "nombre_producto": req.body.nombre_producto,
-            "valor_producto": req.body.valor_producto,
-            "codigo_producto": req.body.codigo_producto,
-            "url_img": req.body.url_img,
-            "id_producto": req.body.id_producto
-
-        }
-        //los datos tienen que ir en el orden de los  ? para que concuerden con los campos donde se guardara
-    const sql = "UPDATE productos SET nombre_producto = ?, valor_producto = ? , codigo_producto ?, url_img = ?  WHERE id_producto = ?";
+    const sql = "SELECT Codigo FROM producto";
     await pool.query(sql, [datos],
         (error, result) => {
             //recibe los errores
@@ -105,18 +47,28 @@ router.put('/editar', async(req, res) => {
                 console.log(error)
             } else {
                 // recibe los resultados de la consulta
-                res.sendStatus(200);
+                res.json(result);
             }
         })
 });
 
-router.put('/editarnombre_pro', async(req, res) => {
-    // RECIBE LOS DATOS
-    const datos = {
-            "nombre_producto": req.body.nombre_producto,
-        }
-        //los datos tienen que ir en el orden de los  ? para que concuerden con los campos donde se guardara
-    const sql = "UPDATE productos SET nombre_producto = ? WHERE id_producto = ?";
+router.get("/nombre", async(req, res) => {
+
+    const sql = "SELECT Nombre FROM producto";
+    await pool.query(sql,
+        (error, result) => {
+            //recibe los errores
+            if (error) {
+                console.log(error)
+            } else {
+                // recibe los resultados de la consulta
+                res.json(result);
+            }
+        })
+});
+
+router.get("/valor", async(req, res) => {
+    const sql = "SELECT Valor FROM producto";
     await pool.query(sql, [datos],
         (error, result) => {
             //recibe los errores
@@ -124,92 +76,79 @@ router.put('/editarnombre_pro', async(req, res) => {
                 console.log(error)
             } else {
                 // recibe los resultados de la consulta
-                res.sendStatus(200);
+                res.json(result);
             }
         })
+
 });
 
-router.put('/editarcodigo_pro', async(req, res) => {
-    // RECIBE LOS DATOS
-    const datos = {
-            "id_producto": req.body.id_producto,
-            "codigo_producto": req.body.codigo_producto,
+router.post('/insertar', async(req, res) => {
+    const { Nombre, Valor, Codigo } = req.body;
+    const newProducto = { Nombre, Valor, Codigo };
+    await pool.query('insert into producto set ?', [newProducto]);
+    console.log(req.body);
+    res.send('funciono');
+});
 
+router.put("/modificar/:id", async(req, res) => {
+    const { id } = req.params;
+    const { Nombre, Valor, Codigo, Imagen } = req.body;
+    const modificaPor = { Nombre, Valor, Codigo, Imagen };
+    await pool.query('UPDATE producto SET ? WHERE id_producto = ? ', [modificaPor, id]);
+    console.log(req.body);
+    res.send('modificado');
+});
 
-        }
-        //los datos tienen que ir en el orden de los  ? para que concuerden con los campos donde se guardara
-    const sql = "UPDATE productos SET  codigo_producto ?  WHERE id_producto = ?";
-    await pool.query(sql, [datos],
+router.put("/modificar/Nombre/:id", async(req, res) => {
+    const { id } = req.params;
+    const { Nombre } = req.body;
+    const modificaPor = { Nombre };
+    await pool.query('UPDATE producto SET Nombre=? WHERE id_producto = ? ', [modificaPor, id]);
+    console.log(req.body);
+    res.send('modificado');
+});
+
+router.put("/modificar/codigo/:id", async(req, res) => {
+    const { id } = req.params;
+    const { Codigo } = req.body;
+    const modificaPor = { Codigo };
+    await pool.query('UPDATE producto SET Codigo=? WHERE id_producto = ? ', [modificaPor, id]);
+    console.log(req.body);
+    res.send('modificado');
+});
+
+router.put("/modificar/valor/:id", async(req, res) => {
+    const { id } = req.params;
+    const { Valor } = req.body;
+    const modificaPor = { Valor };
+    await pool.query('UPDATE producto SET Valor=? WHERE id_producto = ? ', [modificaPor, id]);
+    console.log(req.body);
+    res.send('modificado');
+});
+
+router.put("/modificar/imagen/:id", async(req, res) => {
+    const { id } = req.params;
+    const { Imagen } = req.body;
+    const modificaPor = { Imagen };
+    await pool.query('UPDATE producto SET Imagen=? WHERE id_producto = ? ', [modificaPor, id]);
+    console.log(req.body);
+    res.send('modificado');
+});
+
+router.delete("/eliminar/:id", async(req, res) => {
+
+    const sql = "DELETE FROM producto WHERE id_producto = '?'";
+    await pool.query(sql,
         (error, result) => {
             //recibe los errores
             if (error) {
                 console.log(error)
             } else {
                 // recibe los resultados de la consulta
-                res.sendStatus(200);
+                res.json(result);
             }
         })
+
 });
-router.put('/editarvalor_pro', async(req, res) => {
-    // RECIBE LOS DATOS
-    const datos = {
-
-            "valor_producto": req.body.valor_producto,
-            "id_producto": req.body.id_producto
-
-        }
-        //los datos tienen que ir en el orden de los  ? para que concuerden con los campos donde se guardara
-    const sql = "UPDATE productos SET valor_producto = ? WHERE id_producto = ?";
-    await pool.query(sql, [datos],
-        (error, result) => {
-            //recibe los errores
-            if (error) {
-                console.log(error)
-            } else {
-                // recibe los resultados de la consulta
-                res.sendStatus(200);
-            }
-        })
-});
-router.put('/editarimagen_pro', async(req, res) => {
-    // RECIBE LOS DATOS
-    const datos = {
-
-            "url_img": req.body.url_img,
-            "id_producto": req.body.id_producto
-
-        }
-        //los datos tienen que ir en el orden de los  ? para que concuerden con los campos donde se guardara
-    const sql = "UPDATE productos SET url_img = ? WHERE id_producto = ?";
-    await pool.query(sql, [datos],
-        (error, result) => {
-            //recibe los errores
-            if (error) {
-                console.log(error)
-            } else {
-                // recibe los resultados de la consulta
-                res.sendStatus(200);
-            }
-        })
-});
-// RUTA QUE LISTA LOS PRODUCTOS
-router.delete('/eliminar/:id', async(req, res) => {
-    // sql indica la consulta
-    const sql = "DELETE FROM productos WHERE id_producto = ?";
-    await pool.query(sql, req.params.id,
-        (error, result) => {
-            //recibe los errores
-            if (error) {
-                console.log(error)
-                res.sendStatus(404);
-
-            } else {
-                // recibe los resultados de la consulta
-                res.sendStatus(200);
-            }
-        })
-});
-
-
 
 module.exports = router;

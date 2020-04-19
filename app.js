@@ -18,6 +18,6 @@ app.use('/usuarios', usuariosRoutes);
 
 
 
-app.listen(port, ()=>{
+app.listen(port, () => {
     console.log('SERVER WORKING ON PORT', port);
 })

@@ -1,8 +1,8 @@
-module.exports={
-    database:{
+module.exports = {
+    database: {
         host: 'localhost',
         user: 'root',
         password: '',
-        database: 'productos'
+        database: 'base'
     }
 };
