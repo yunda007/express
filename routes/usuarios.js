@@ -19,6 +19,35 @@ router.get('/listar', async(req, res) => {
         })
 });
 
+router.get('/amigos', async(req, res) => {
+    // sql indica la consulta
+    const sql = "SELECT a.* FROM amigos a, estado e WHERE a.id_estado = e.id_estado AND a.id_estado=1";
+    await pool.query(sql,
+        (error, result) => {
+            //recibe los errores
+            if (error) {
+                console.log(error)
+            } else {
+                // recibe los resultados de la consulta
+                res.json(result);
+            }
+        })
+});
+
+router.get('/perfil', async(req, res) => {
+    // sql indica la consulta
+    const sql = "SELECT * FROM usuario";
+    await pool.query(sql,
+        (error, result) => {
+            //recibe los errores
+            if (error) {
+                console.log(error)
+            } else {
+                // recibe los resultados de la consulta
+                res.json(result);
+            }
+        })
+});
 
 router.post('/insertar', async(req, res) => {
     const { Nombre, User, pass } = req.body;
