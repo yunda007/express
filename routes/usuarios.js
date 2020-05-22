@@ -19,6 +19,8 @@ router.get('/listar', async(req, res) => {
         })
 });
 
+
+
 router.get('/amigos', async(req, res) => {
     // sql indica la consulta
     const sql = "SELECT a.* FROM amigos a, estado e WHERE a.id_estado = e.id_estado AND a.id_estado=1";
@@ -55,6 +57,37 @@ router.post('/insertar', async(req, res) => {
     await pool.query('insert into usuario set ?', [newusuario]);
     console.log(req.body);
     res.send('tamos listones');
+});
+
+router.post('/contacto', async(req, res) => {
+    const { contacto, id_chat } = req.body;
+    const newusuario = { contacto, id_chat };
+    await pool.query('insert into contacto set ?', [newusuario]);
+    console.log(req.body);
+    res.send('tamos listones');
+});
+
+router.post('/mensaje', async(req, res) => {
+    const { contacto, mensajes } = req.body;
+    const newusuario = { contacto, mensajes };
+    await pool.query('insert into contacto set ?', [newusuario]);
+    console.log(req.body);
+    res.send('tamos listones');
+});
+
+router.get('/chat', async(req, res) => {
+    // sql indica la consulta
+    const sql = "SELECT c.* FROM contacto c, chat ch WHERE c.id_chat = ch.id AND ch.id= '1'";
+    await pool.query(sql,
+        (error, result) => {
+            //recibe los errores
+            if (error) {
+                console.log(error)
+            } else {
+                // recibe los resultados de la consulta
+                res.json(result);
+            }
+        })
 });
 
 router.put("/modificar/:id", async(req, res) => {
